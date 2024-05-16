@@ -1,26 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parcing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/05/15 20:29:08 by sessarhi         ###   ########.fr       */
+/*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
+/*   Updated: 2024/05/16 14:44:22 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-
-
-
-int main(int ac , char **av)
+static	int	ft_isdigit(int c)
 {
-	if (ac == 6 || ac == 5)
-	{
-		
-	}
+	if (c >= '0' && c <= '9')
+		return (1);
 	return (0);
+}
+static	int	check_dig(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (av[i])
+	{
+		j = 0;
+		while (av[i][j])
+		{
+			if (ft_isdigit(av[i][j]) == 0)
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+int ft_parce_args(int ac, char **av)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		if (!av[i])
+			return (0);	
+		i++;	
+	}
+	if (!check_dig(av))
+		return 0;
+	return (1);
 }

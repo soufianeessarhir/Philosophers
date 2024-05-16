@@ -1,5 +1,6 @@
 NAME = philo
-SOURCES = main.c\
+SOURCES = mandatory/main.c\
+		  mandatory/parcing.c\
 
 
 OBJECTS = $(SOURCES:.c=.o)
@@ -17,9 +18,9 @@ $(NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJECTS) $(CH_OBJECTS)
+	$(RM) $(OBJECTS) 
 
 fclean: clean
-	$(RM) $(NAME) $(CHECKER)
+	$(RM) $(NAME) 
 
 re: fclean all
