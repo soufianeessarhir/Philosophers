@@ -1,6 +1,7 @@
 NAME = philo
 SOURCES = mandatory/main.c\
 		  mandatory/parcing.c\
+		  utils.c\
 
 
 OBJECTS = $(SOURCES:.c=.o)
