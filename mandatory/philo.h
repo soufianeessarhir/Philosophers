@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/05/19 18:35:56 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/05/25 02:17:02 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ typedef struct s_philo
 	int				*dead;
 	pthread_mutex_t	*fr_fork;
 	pthread_mutex_t	*sc_fork;
-	// pthread_mutex_t	*write_lock;
-	// pthread_mutex_t	*dead_lock;
-	// pthread_mutex_t	*meal_lock;
 }					t_philo;
 
 typedef struct data
@@ -49,7 +46,7 @@ typedef struct data
 
 int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
-
-
+void *s_malloc (size_t size);
+void exit_error(char *s);
 
 #endif
