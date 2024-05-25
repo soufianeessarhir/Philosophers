@@ -1,10 +1,11 @@
 NAME = philo
 SOURCES = mandatory/main.c\
 		  mandatory/parcing.c\
-		  utils.c\
+		  mandatory/utils.c\
 
 
 OBJECTS = $(SOURCES:.c=.o)
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror 
 RM = rm -f

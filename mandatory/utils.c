@@ -6,11 +6,11 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/05/19 18:35:08 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/05/25 02:20:27 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include "philo.h"
 int	ft_atoi(const char *str)
 {
 	long long	nb;
@@ -28,14 +28,22 @@ int	ft_atoi(const char *str)
 	}
 	while (*str && (*str >= '0' && *str <= '9'))
 	{
-		// if (nb > MAX || (nb == MAX && *str - '0' > 7))
-		// {
-		// 	if (s == 1)
-		// 		return (-1);
-		// 	return (0); 
-		// }
 		nb = nb * 10 + (*str - '0');
 		str++;
 	}
 	return (s * nb);
+}
+void exit_error(char *s)
+{
+	printf("%s\n",s);
+	exit(0);
+}
+void *s_malloc (size_t size)
+{
+	void *val;
+	val = malloc(size);
+	if (!val)
+		exit(printf("malloc has been failed when it tries to alloc %zu\n size",size));
+	else
+		return val;	
 }
