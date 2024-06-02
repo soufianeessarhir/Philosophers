@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/05/25 02:17:02 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/03 00:06:56 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,13 @@ typedef struct s_philo
 	size_t			start_time;
 	int				num_of_philos;
 	int				num_times_to_eat;
-	int				*dead;
-	pthread_mutex_t	*fr_fork;
-	pthread_mutex_t	*sc_fork;
 }					t_philo;
 
 typedef struct data
 {
 	int				dead_flag;
 	t_philo			*philo;
-	
+	pthread_mutex_t	*forks;
 }t_data;
 
 

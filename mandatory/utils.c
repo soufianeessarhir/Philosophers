@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/05/25 02:20:27 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/02 22:39:56 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (s * nb);
-}
-void exit_error(char *s)
-{
-	printf("%s\n",s);
-	exit(0);
 }
 void *s_malloc (size_t size)
 {
