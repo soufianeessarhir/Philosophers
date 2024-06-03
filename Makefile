@@ -7,7 +7,7 @@ SOURCES = mandatory/main.c\
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 RM = rm -f
 
 all: $(NAME)
