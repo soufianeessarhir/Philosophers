@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/04 00:47:53 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/06 05:58:48 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -26,17 +27,19 @@
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
+#define BOLD    "\033[1m"
+#define UNDERLINE "\033[4m"
+#define REVERSE "\033[7m"
 typedef struct s_philo
 {
+	pthread_t		admin;
 	pthread_t		thread;
+	size_t			last_time_eat;
 	int				id;
-	int				eating;
-	int				meals_eaten;
-	size_t			last_meal;
+	size_t			start_time;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
-	size_t			start_time;
 	int				num_of_philos;
 	int				num_times_to_eat;
 	pthread_mutex_t	*left_fork;
@@ -45,7 +48,6 @@ typedef struct s_philo
 
 typedef struct data
 {
-	int				dead_flag;
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
 }t_data;
@@ -54,6 +56,8 @@ typedef struct data
 int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
 void *s_malloc (size_t size);
-void exit_error(char *s);
+size_t	current_time(void);
+int	ft_usleep(size_t t_ms);
+void init_data(t_data *data, int ac, char **av);
 
 #endif
