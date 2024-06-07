@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 06:06:14 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/07 23:47:44 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ int	ft_usleep(size_t t_ms,t_philo *philo)
 	}
 	return (0);
 }
-void eating(t_philo **philo, size_t start_time)
+void eating(t_philo **philo)
 {
     (*philo)->last_time_eat = current_time();
-    printf(MAGENTA"%zu %d is sleeping\n"RESET, current_time() - start_time, (*philo)->id);
+	ft_message(*philo,"is eating",MAGENTA);
 }
