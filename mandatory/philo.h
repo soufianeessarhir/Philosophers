@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 04:19:09 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/07 06:58:19 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	pthread_mutex_t message;
+	int 			counter;
     int             dead_flag;
     size_t          start_time;
     int             num_of_philos;
@@ -65,5 +67,6 @@ void *s_malloc (size_t size);
 size_t	current_time(void);
 int	ft_usleep(size_t t_ms,t_philo *philo);
 void init_data(t_data *data, int ac, char **av);
+void eating(t_philo **philo, size_t start_time);
 
 #endif

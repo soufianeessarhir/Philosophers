@@ -1,6 +1,6 @@
 NAME = philo
 SOURCES = mandatory/main.c\
-		  mandatory/parcing.c\
+		  mandatory/par_int.c\
 		  mandatory/utils.c\
 
 

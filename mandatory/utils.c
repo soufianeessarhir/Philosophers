@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 04:21:00 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/07 06:06:14 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,30 +69,8 @@ int	ft_usleep(size_t t_ms,t_philo *philo)
 	}
 	return (0);
 }
-void init_data(t_data *data, int ac, char **av)
+void eating(t_philo **philo, size_t start_time)
 {
-    int i;
-    int num_philos;
-
-    i = 0;
-    num_philos = atoi(av[1]);
-    data->philo = malloc(sizeof(t_philo) * num_philos);
-    data->forks = malloc(sizeof(pthread_mutex_t) * num_philos);
-    data->num_of_philos = num_philos;
-    data->time_to_die = atoi(av[2]);
-    pthread_mutex_init(&data->dead_flag_mutex, NULL);
-
-    data->dead_flag = 0;
-    while (i < num_philos)
-    {
-        data->philo[i].id = i + 1;
-        data->philo[i].num_times_to_eat = (ac == 6) ? atoi(av[5]) : -1;
-        data->philo[i].time_to_eat = atoi(av[3]);
-        data->philo[i].time_to_sleep = atoi(av[4]);
-        data->philo[i].left_fork = &data->forks[i];
-        data->philo[i].right_fork = &data->forks[(i + 1) % num_philos];
-        data->philo[i].data = data;
-        pthread_mutex_init(&data->forks[i], NULL);
-        i++;
-    }
+    (*philo)->last_time_eat = current_time();
+    printf(MAGENTA"%zu %d is sleeping\n"RESET, current_time() - start_time, (*philo)->id);
 }
