@@ -6,17 +6,25 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 06:59:00 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/07 23:48:15 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void ft_message(t_philo *philo,char	*text,char	*color)
+void ft_message(t_philo *philo, char *text, char *color)
 {
-	pthread_mutex_lock(&philo->data->message);
-	printf("%s""%zu %d %s\n" RESET,color,current_time() - philo->data->start_time, philo->id,text);
-	pthread_mutex_unlock(&philo->data->message);
+    pthread_mutex_lock(&philo->data->message);
+    pthread_mutex_lock(&philo->data->dead_flag_mutex);
+	
+    if (!philo->data->dead_flag)
+	{
+        printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->data->start_time, philo->id, text);
+    	pthread_mutex_unlock(&philo->data->dead_flag_mutex);
+		
+	}
+    pthread_mutex_unlock(&philo->data->dead_flag_mutex);
+    pthread_mutex_unlock(&philo->data->message);
 }
 void *a_worker(void *args)
 {
@@ -35,7 +43,10 @@ void *a_worker(void *args)
 				pthread_mutex_unlock(data->philo[i].left_fork);
 				pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
+				
+                pthread_mutex_lock(&data->message);
                 printf(BOLD  RED"%zu %d has died\n"RESET, current_time() - data->start_time, data->philo[i].id);
+                pthread_mutex_unlock(&data->message);
                 return NULL;
             }
             i++;
@@ -50,11 +61,11 @@ void handle_forks_and_eat(t_philo *philo)
 	ft_message(philo,"has taken a fork",CYAN);
 	pthread_mutex_lock(philo->right_fork);
     ft_message(philo,"has taken a fork",CYAN);
-	ft_message(philo,"is eating",YELLOW);
+    eating(&philo);
     ft_usleep(philo->time_to_eat,philo);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
-    eating(&philo, philo->data->start_time);
+	ft_message(philo,"is sleeping",YELLOW);
     ft_usleep(philo->time_to_sleep,philo);
 	ft_message(philo,"is thinking",GREEN);
 }
