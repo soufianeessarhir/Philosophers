@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 23:47:44 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/08 00:16:10 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int	ft_usleep(size_t t_ms,t_philo *philo)
 }
 void eating(t_philo **philo)
 {
+    pthread_mutex_lock(&(*philo)->time_mutex); 
     (*philo)->last_time_eat = current_time();
-	ft_message(*philo,"is eating",MAGENTA);
+    pthread_mutex_unlock(&(*philo)->time_mutex);
+    ft_message((*philo), "is eating", YELLOW);
 }

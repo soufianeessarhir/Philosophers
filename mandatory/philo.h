@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 23:47:51 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/08 00:13:29 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 typedef struct s_data t_data;
 typedef struct s_philo
 {
+	pthread_mutex_t	time_mutex;
     int             dead;
     pthread_t       thread;
     size_t          last_time_eat;

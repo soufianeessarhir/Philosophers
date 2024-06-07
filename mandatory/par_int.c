@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 23:19:42 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/08 00:14:26 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void init_data(t_data *data, int ac, char **av)
     data->time_to_die = ft_atoi(av[2]);
     pthread_mutex_init(&data->dead_flag_mutex, NULL);
 	data->start_time = current_time();
+	pthread_mutex_init(&data->philo->time_mutex, NULL);
     data->dead_flag = 0;
 	pthread_mutex_init(&data->message,NULL);
     while (data->counter < data->num_of_philos)

@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/07 23:48:15 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/08 00:34:59 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,24 @@ void *a_worker(void *args)
     t_data *data = (t_data *)args;
     while (!data->dead_flag)
     {
-        i = 0;
-        while (i < data->num_of_philos)
+        i = -1;
+        while (++i < data->num_of_philos)
         {
-            if (current_time() - data->start_time > data->time_to_die)
+            pthread_mutex_lock(&data->philo->time_mutex);
+            if (current_time() - data->philo->last_time_eat > data->time_to_die)
             {
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
 				pthread_mutex_unlock(data->philo[i].left_fork);
 				pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
-				
-                pthread_mutex_lock(&data->message);
+                // pthread_mutex_lock(&data->message);
                 printf(BOLD  RED"%zu %d has died\n"RESET, current_time() - data->start_time, data->philo[i].id);
-                pthread_mutex_unlock(&data->message);
+                // pthread_mutex_unlock(&data->message);
+           		pthread_mutex_unlock(&data->philo->time_mutex);
                 return NULL;
             }
-            i++;
+           	pthread_mutex_unlock(&data->philo->time_mutex);
         }
     }
     return NULL;
@@ -65,7 +66,7 @@ void handle_forks_and_eat(t_philo *philo)
     ft_usleep(philo->time_to_eat,philo);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
-	ft_message(philo,"is sleeping",YELLOW);
+	ft_message(philo,"is sleeping",MAGENTA);
     ft_usleep(philo->time_to_sleep,philo);
 	ft_message(philo,"is thinking",GREEN);
 }
@@ -110,6 +111,7 @@ int th_starting(t_data *data)
             return (printf(RED"Failed to join philosopher number %d\n"RESET, i));
         i++;
     }
+	pthread_join(data->admin, NULL);
     pthread_detach(data->admin);
     return 0;
 }
