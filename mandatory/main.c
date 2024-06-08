@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/08 00:34:59 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/08 07:16:44 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@ void ft_message(t_philo *philo, char *text, char *color)
 {
     pthread_mutex_lock(&philo->data->message);
     pthread_mutex_lock(&philo->data->dead_flag_mutex);
-	
     if (!philo->data->dead_flag)
 	{
         printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->data->start_time, philo->id, text);
     	pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-		
 	}
     pthread_mutex_unlock(&philo->data->dead_flag_mutex);
     pthread_mutex_unlock(&philo->data->message);
@@ -33,8 +31,8 @@ void *a_worker(void *args)
     t_data *data = (t_data *)args;
     while (!data->dead_flag)
     {
-        i = -1;
-        while (++i < data->num_of_philos)
+        i = 0;
+        while (i < data->num_of_philos)
         {
             pthread_mutex_lock(&data->philo->time_mutex);
             if (current_time() - data->philo->last_time_eat > data->time_to_die)
@@ -42,15 +40,16 @@ void *a_worker(void *args)
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
 				pthread_mutex_unlock(data->philo[i].left_fork);
-				pthread_mutex_unlock(data->philo[i].right_fork);
+				// pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
-                // pthread_mutex_lock(&data->message);
+                pthread_mutex_lock(&data->message);
                 printf(BOLD  RED"%zu %d has died\n"RESET, current_time() - data->start_time, data->philo[i].id);
-                // pthread_mutex_unlock(&data->message);
+                pthread_mutex_unlock(&data->message);
            		pthread_mutex_unlock(&data->philo->time_mutex);
                 return NULL;
             }
            	pthread_mutex_unlock(&data->philo->time_mutex);
+			i++;
         }
     }
     return NULL;
@@ -60,6 +59,13 @@ void handle_forks_and_eat(t_philo *philo)
 {
     pthread_mutex_lock(philo->left_fork);
 	ft_message(philo,"has taken a fork",CYAN);
+	pthread_mutex_lock(&philo->data->dead_flag_mutex);
+    // if (!philo->data->dead_flag)
+	// {
+    //  	pthread_mutex_unlock(philo->left_fork);
+    // 	pthread_mutex_unlock(&philo->data->dead_flag_mutex);
+	// }
+    pthread_mutex_unlock(&philo->data->dead_flag_mutex);
 	pthread_mutex_lock(philo->right_fork);
     ft_message(philo,"has taken a fork",CYAN);
     eating(&philo);
