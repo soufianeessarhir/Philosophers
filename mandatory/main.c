@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/08 07:16:44 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/09 02:28:34 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,47 +34,48 @@ void *a_worker(void *args)
         i = 0;
         while (i < data->num_of_philos)
         {
-            pthread_mutex_lock(&data->philo->time_mutex);
-            if (current_time() - data->philo->last_time_eat > data->time_to_die)
+            pthread_mutex_lock(&data->philo[i].time_mutex);
+            if (current_time() - data->philo[i].last_time_eat >= data->time_to_die)
             {
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
-				pthread_mutex_unlock(data->philo[i].left_fork);
-				// pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
                 pthread_mutex_lock(&data->message);
                 printf(BOLD  RED"%zu %d has died\n"RESET, current_time() - data->start_time, data->philo[i].id);
                 pthread_mutex_unlock(&data->message);
-           		pthread_mutex_unlock(&data->philo->time_mutex);
+           		pthread_mutex_unlock(&data->philo[i].time_mutex);
                 return NULL;
             }
-           	pthread_mutex_unlock(&data->philo->time_mutex);
+           	pthread_mutex_unlock(&data->philo[i].time_mutex);
 			i++;
         }
     }
     return NULL;
 }
 
-void handle_forks_and_eat(t_philo *philo)
+void handle_forks_and_eat(t_philo **philo)
 {
-    pthread_mutex_lock(philo->left_fork);
-	ft_message(philo,"has taken a fork",CYAN);
-	pthread_mutex_lock(&philo->data->dead_flag_mutex);
-    // if (!philo->data->dead_flag)
-	// {
-    //  	pthread_mutex_unlock(philo->left_fork);
-    // 	pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-	// }
-    pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-	pthread_mutex_lock(philo->right_fork);
-    ft_message(philo,"has taken a fork",CYAN);
-    eating(&philo);
-    ft_usleep(philo->time_to_eat,philo);
-    pthread_mutex_unlock(philo->left_fork);
-    pthread_mutex_unlock(philo->right_fork);
-	ft_message(philo,"is sleeping",MAGENTA);
-    ft_usleep(philo->time_to_sleep,philo);
-	ft_message(philo,"is thinking",GREEN);
+    pthread_mutex_lock(&(*philo)->data->dead_flag_mutex);
+    if ((*philo)->data->dead_flag)
+    {
+        pthread_mutex_unlock(&(*philo)->data->dead_flag_mutex);
+        return;
+    }
+    pthread_mutex_unlock(&(*philo)->data->dead_flag_mutex);
+    pthread_mutex_lock((*philo)->left_fork);
+    ft_message((*philo),"has taken a fork",CYAN);
+    pthread_mutex_lock((*philo)->right_fork);
+    ft_message((*philo),"has taken a fork",CYAN);
+    pthread_mutex_lock(&(*philo)->time_mutex);
+    (*philo)->last_time_eat = current_time();
+    ft_message((*philo), "is eating", YELLOW);
+    pthread_mutex_unlock(&(*philo)->time_mutex);
+    ft_usleep((*philo)->time_to_eat,(*philo));
+    pthread_mutex_unlock((*philo)->left_fork);
+    pthread_mutex_unlock((*philo)->right_fork);
+    ft_message((*philo),"is sleeping",MAGENTA);
+    ft_usleep((*philo)->time_to_sleep,(*philo));
+    ft_message((*philo),"is thinking",GREEN);
 }
 
 void *worker(void *args)
@@ -87,11 +88,14 @@ void *worker(void *args)
     	pthread_mutex_lock(&philo->data->dead_flag_mutex);
 		if (philo->data->dead_flag)
 		{
+			
+			pthread_mutex_unlock(philo->left_fork);
+			pthread_mutex_unlock(philo->right_fork);
 			pthread_mutex_unlock(&philo->data->dead_flag_mutex);
 			break;
 		}
 		pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-        handle_forks_and_eat(philo);
+        handle_forks_and_eat(&philo);
     }
     return NULL;
 }
