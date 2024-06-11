@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 10:48:05 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:13:46 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,24 +59,27 @@ void init_data(t_data *data, int ac, char **av)
     data->time_to_die = ft_atoi(av[2]);
     data->philo = malloc(sizeof(t_philo) * data->num_of_philos);
     data->forks = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
-	data->start_time = current_time();
     data->dead_flag = 0;
 	pthread_mutex_init(&data->time_mutex, NULL);
 	pthread_mutex_init(&data->message,NULL);
     pthread_mutex_init(&data->dead_flag_mutex, NULL);
     while (++data->counter < data->num_of_philos)
     {
-        data->philo[data->counter].id = data->counter + 1;
         pthread_mutex_init(&data->forks[data->counter], NULL);
+		data->philo[data->counter].start_time = current_time();
+        data->philo[data->counter].id = data->counter + 1;
 		if (ac == 6)
         	data->philo[data->counter].num_times_to_eat = ft_atoi(av[5]);
 		else
         	data->philo[data->counter].num_times_to_eat =  -1;
+		data->philo[data->counter].dead = &data->dead_flag;
+		data->philo[data->counter].dead_flag_mutex = &data->dead_flag_mutex;
+		data->philo[data->counter].time_mutex = &data->time_mutex;
+		data->philo[data->counter].message = &data->message;
         data->philo[data->counter].time_to_eat = ft_atoi(av[3]);
         data->philo[data->counter].time_to_sleep = ft_atoi(av[4]);
         data->philo[data->counter].left_fork = &data->forks[data->counter];
         data->philo[data->counter].right_fork = &data->forks[(data->counter + 1) % data->num_of_philos];
-        data->philo[data->counter].data = data;
 		data->philo[data->counter].last_time_eat = current_time();
     }
 }
