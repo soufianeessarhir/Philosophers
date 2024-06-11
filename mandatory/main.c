@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 10:31:49 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 10:34:08 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ void *worker(void *args)
     if (philo->id % 2 == 0) ft_usleep(10);
    	while (1)
     {
+        handle_forks_and_eat(philo);
         pthread_mutex_lock(&philo->data->dead_flag_mutex);
         if ((philo)->data->dead_flag)
             return(pthread_mutex_unlock(&philo->data->dead_flag_mutex),NULL);
         pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-        handle_forks_and_eat(philo);
     }
     return NULL;
 }
