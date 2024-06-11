@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 10:51:36 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:24:22 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void ft_message(t_philo *philo, char *text, char *color)
 {
-    pthread_mutex_lock(&philo->data->dead_flag_mutex);
-    if (!philo->data->dead_flag)
+    pthread_mutex_lock(philo->dead_flag_mutex);
+    if (!*philo->dead)
 	{
-        pthread_mutex_lock(&philo->data->message);
-        printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->data->start_time, philo->id, text);
-        pthread_mutex_unlock(&philo->data->message);
-    	pthread_mutex_unlock(&philo->data->dead_flag_mutex);
+        pthread_mutex_lock(philo->message);
+        printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->start_time, philo->id, text);
+        pthread_mutex_unlock(philo->message);
+    	pthread_mutex_unlock(philo->dead_flag_mutex);
 	}
-    pthread_mutex_unlock(&philo->data->dead_flag_mutex);
+    pthread_mutex_unlock(philo->dead_flag_mutex);
 }
 void *a_worker(void *args)
 {
@@ -53,14 +53,14 @@ void *a_worker(void *args)
 
 void handle_forks_and_eat(t_philo *philo)
 {
-    pthread_mutex_lock(philo->left_fork);
-    ft_message(philo,"has taken a fork",CYAN);
     pthread_mutex_lock(philo->right_fork);
     ft_message(philo,"has taken a fork",CYAN);
+    pthread_mutex_lock(philo->left_fork);
+    ft_message(philo,"has taken a fork",CYAN);
     ft_message(philo, "is eating", YELLOW);
-    pthread_mutex_lock(&philo->data->time_mutex);
+    pthread_mutex_lock(philo->time_mutex);
     philo->last_time_eat = current_time();
-    pthread_mutex_unlock(&philo->data->time_mutex);
+    pthread_mutex_unlock(philo->time_mutex);
     pthread_mutex_unlock(philo->right_fork);
     pthread_mutex_unlock(philo->left_fork);
     ft_usleep(philo->time_to_eat);
@@ -76,11 +76,11 @@ void *worker(void *args)
     if (philo->id % 2 == 0) ft_usleep(1);
    	while (1)
     {
+        pthread_mutex_lock(philo->dead_flag_mutex);
+        if (*philo->dead)
+            return(pthread_mutex_unlock(philo->dead_flag_mutex),NULL);
+        pthread_mutex_unlock(philo->dead_flag_mutex);
         handle_forks_and_eat(philo);
-        pthread_mutex_lock(&philo->data->dead_flag_mutex);
-        if ((philo)->data->dead_flag)
-            return(pthread_mutex_unlock(&philo->data->dead_flag_mutex),NULL);
-        pthread_mutex_unlock(&philo->data->dead_flag_mutex);
     }
     return NULL;
 }
@@ -88,26 +88,18 @@ void *worker(void *args)
 int th_starting(t_data *data)
 {
     int i;
-    
-    i = 0;
 
-    while (i < data->num_of_philos)
-    {
+    i = -1;
+    while (++i < data->num_of_philos)
         if (pthread_create(&data->philo[i].thread, NULL, worker, &data->philo[i]))
             return (printf(RED"Failed to create philosopher number %d\n"RESET, i));
-        i++;
-    }
     if (pthread_create(&data->admin, NULL, a_worker, data))
         return (printf(RED"Failed to create admin philosopher\n"RESET));
-    i = 0;
-    while (i < data->num_of_philos)
-    {
+    i = -1;
+    while (++i < data->num_of_philos)
         if (pthread_join(data->philo[i].thread, NULL))
             return (printf(RED"Failed to join philosopher number %d\n"RESET, i));
-        i++;
-    }
 	pthread_join(data->admin, NULL);
-    pthread_detach(data->admin);
     return 0;
 }
 
