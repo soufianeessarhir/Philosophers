@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 10:34:08 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 10:51:36 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,18 @@ void *a_worker(void *args)
         i = -1;
         while (++i < data->num_of_philos && !data->dead_flag)
         {
-            pthread_mutex_lock(&data->philo[i].time_mutex);
+            pthread_mutex_lock(&data->time_mutex);
             if (current_time() - data->philo[i].last_time_eat >= data->time_to_die)
             {
                 ft_message(&data->philo[i], "died", RED);
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
                 pthread_mutex_unlock(data->philo[i].left_fork);
+           		pthread_mutex_unlock(&data->time_mutex);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
-           		pthread_mutex_unlock(&data->philo[i].time_mutex);
                 return NULL;
             }
-           	pthread_mutex_unlock(&data->philo[i].time_mutex);
+           	pthread_mutex_unlock(&data->time_mutex);
         }
     }
     return NULL;
@@ -58,12 +58,12 @@ void handle_forks_and_eat(t_philo *philo)
     pthread_mutex_lock(philo->right_fork);
     ft_message(philo,"has taken a fork",CYAN);
     ft_message(philo, "is eating", YELLOW);
-    pthread_mutex_lock(&philo->time_mutex);
+    pthread_mutex_lock(&philo->data->time_mutex);
     philo->last_time_eat = current_time();
-    pthread_mutex_unlock(&philo->time_mutex);
-    ft_usleep(philo->time_to_eat);
-    pthread_mutex_unlock(philo->left_fork);
+    pthread_mutex_unlock(&philo->data->time_mutex);
     pthread_mutex_unlock(philo->right_fork);
+    pthread_mutex_unlock(philo->left_fork);
+    ft_usleep(philo->time_to_eat);
     ft_message(philo,"is sleeping",MAGENTA);
     ft_usleep(philo->time_to_sleep);
     ft_message(philo,"is thinking",GREEN);
@@ -73,7 +73,7 @@ void *worker(void *args)
 {
     t_philo *philo = (t_philo *)args;
     
-    if (philo->id % 2 == 0) ft_usleep(10);
+    if (philo->id % 2 == 0) ft_usleep(1);
    	while (1)
     {
         handle_forks_and_eat(philo);

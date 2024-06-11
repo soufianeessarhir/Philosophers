@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 10:33:19 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 10:48:05 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,18 @@ void init_data(t_data *data, int ac, char **av)
 {
     data->counter = -1;
     data->num_of_philos = ft_atoi(av[1]);
+    data->time_to_die = ft_atoi(av[2]);
     data->philo = malloc(sizeof(t_philo) * data->num_of_philos);
     data->forks = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
-    data->time_to_die = ft_atoi(av[2]);
-    pthread_mutex_init(&data->dead_flag_mutex, NULL);
 	data->start_time = current_time();
     data->dead_flag = 0;
+	pthread_mutex_init(&data->time_mutex, NULL);
 	pthread_mutex_init(&data->message,NULL);
+    pthread_mutex_init(&data->dead_flag_mutex, NULL);
     while (++data->counter < data->num_of_philos)
     {
-		pthread_mutex_init(&data->philo[data->counter].time_mutex, NULL);
-        pthread_mutex_init(&data->forks[data->counter], NULL);
         data->philo[data->counter].id = data->counter + 1;
+        pthread_mutex_init(&data->forks[data->counter], NULL);
 		if (ac == 6)
         	data->philo[data->counter].num_times_to_eat = ft_atoi(av[5]);
 		else
