@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 14:13:03 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:47:49 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,17 @@ typedef struct s_philo
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
     size_t          start_time;
+    int             num_of_philos;
 } t_philo;
 
 typedef struct s_data
 {
+    int             num_of_philos;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t message;
     pthread_mutex_t dead_flag_mutex;
 	int 			counter;
     int             dead_flag;
-    int             num_of_philos;
     pthread_t       admin;
     size_t          time_to_die;
     t_philo         *philo;
