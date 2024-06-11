@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/09 02:11:32 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 05:04:29 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
 void *s_malloc (size_t size);
 size_t	current_time(void);
-int	ft_usleep(size_t t_ms,t_philo *philo);
+int	ft_usleep(size_t t_ms);
 void init_data(t_data *data, int ac, char **av);
 void ft_message(t_philo *philo, char *text, char *color);
 
