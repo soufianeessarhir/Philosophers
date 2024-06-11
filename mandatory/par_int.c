@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 03:42:21 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 08:24:16 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ void init_data(t_data *data, int ac, char **av)
     data->time_to_die = ft_atoi(av[2]);
     pthread_mutex_init(&data->dead_flag_mutex, NULL);
 	data->start_time = current_time();
-	pthread_mutex_init(&data->philo->time_mutex, NULL);
     data->dead_flag = 0;
 	pthread_mutex_init(&data->message,NULL);
     while (data->counter < data->num_of_philos)
     {
+		pthread_mutex_init(&data->philo[data->counter].time_mutex, NULL);
         data->philo[data->counter].id = data->counter + 1;
 		if (ac == 6)
         	data->philo[data->counter].num_times_to_eat = ft_atoi(av[5]);
@@ -76,6 +76,7 @@ void init_data(t_data *data, int ac, char **av)
         data->philo[data->counter].left_fork = &data->forks[data->counter];
         data->philo[data->counter].right_fork = &data->forks[(data->counter + 1) % data->num_of_philos];
         data->philo[data->counter].data = data;
+		data->philo[data->counter].last_time_eat = current_time();
         pthread_mutex_init(&data->forks[data->counter], NULL);
         data->counter++;
     }
