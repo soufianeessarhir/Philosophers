@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/09 02:11:26 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/11 05:04:10 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,13 @@ size_t	current_time(void)
 	gettimeofday(&time, NULL);
 	return (time.tv_sec * 1e3 + time.tv_usec / 1e3);
 }
-int	ft_usleep(size_t t_ms,t_philo *philo)
+int	ft_usleep(size_t t_ms)
 {
 	size_t	start;
 
 	start = current_time();
 	while ((current_time() - start) < t_ms)
 	{
-		pthread_mutex_lock(&philo->data->dead_flag_mutex);
-		if (philo->data->dead_flag)
-		{
-			pthread_mutex_unlock(&philo->data->dead_flag_mutex);
-			break;
-		}
-		pthread_mutex_unlock(&philo->data->dead_flag_mutex);
 		usleep(100);
 	}
 	return (0);
