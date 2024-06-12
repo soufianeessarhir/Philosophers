@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 14:47:49 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:56:39 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 #define BOLD    "\033[1m"
 #define UNDERLINE "\033[4m"
 #define REVERSE "\033[7m"
-
+#define BOLD_RED "\x1b[1m\x1b[31m"
 typedef struct s_data t_data;
 typedef struct s_philo
 {
@@ -67,9 +67,10 @@ typedef struct s_data
 
 int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
-void *s_malloc (size_t size);
 size_t	current_time(void);
-int	ft_usleep(size_t t_ms);
+int	ft_usleep(size_t t_ms, t_philo *philo);
+int dead_check(t_philo *philo);
+void ft_message(t_philo *philo, char *text, char *color);
 void init_data(t_data *data, int ac, char **av);
 void ft_message(t_philo *philo, char *text, char *color);
 

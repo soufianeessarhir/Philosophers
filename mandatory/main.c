@@ -6,39 +6,20 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 14:19:06 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:57:03 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int dead_check(t_philo *philo)
-{
-    int i;
 
-    i = -1;
-    while (++i < philo->num_of_philos)
-    {
-        pthread_mutex_lock(philo->dead_flag_mutex);
-        if (*philo->dead == 1)
-            return (pthread_mutex_unlock(philo->dead_flag_mutex),1);   
-        pthread_mutex_unlock(philo->dead_flag_mutex);
-    }
-    return 0;
-}
 
-void ft_message(t_philo *philo, char *text, char *color)
-{
-    pthread_mutex_lock(philo->message);
-    if (!dead_check(philo))
-        printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->start_time, philo->id, text);
-    pthread_mutex_unlock(philo->message);
-}
 void *a_worker(void *args)
 {
     int i;
+    t_data *data;
     
-    t_data *data = (t_data *)args;
+    data = (t_data *)args;
     while (!dead_check(data->philo))
     {
         i = -1;
@@ -47,12 +28,13 @@ void *a_worker(void *args)
             pthread_mutex_lock(&data->time_mutex);
             if (current_time() - data->philo[i].last_time_eat > data->time_to_die)
             {
-                ft_message(&data->philo[i], "died", RED);
+                ft_message(&data->philo[i], "died", BOLD_RED);
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
+                pthread_mutex_unlock(data->philo[i].left_fork);
+                pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
            		pthread_mutex_unlock(&data->time_mutex);
-                pthread_mutex_lock(data->philo[i].left_fork);
                 return NULL;
             }
            	pthread_mutex_unlock(&data->time_mutex);
@@ -63,24 +45,25 @@ void *a_worker(void *args)
 
 void *worker(void *args)
 {
-    t_philo *philo = (t_philo *)args;
+    t_philo *philo;
     
-    if (philo->id % 2 == 0) ft_usleep(1);
+    philo = (t_philo *)args;
+    if (philo->id % 2 == 0) ft_usleep(1, philo);
    	while (!dead_check(philo))
     {
-        pthread_mutex_lock(philo->right_fork);
-        ft_message(philo,"has taken a fork",CYAN);
         pthread_mutex_lock(philo->left_fork);
         ft_message(philo,"has taken a fork",CYAN);
+        pthread_mutex_lock(philo->right_fork);
+        ft_message(philo,"has taken a fork",CYAN);
         ft_message(philo, "is eating", YELLOW);
-        ft_usleep(philo->time_to_eat);
+        ft_usleep(philo->time_to_eat, philo);
         pthread_mutex_lock(philo->time_mutex);
         philo->last_time_eat = current_time();
         pthread_mutex_unlock(philo->time_mutex);
-        pthread_mutex_unlock(philo->left_fork);
         pthread_mutex_unlock(philo->right_fork);
+        pthread_mutex_unlock(philo->left_fork);
         ft_message(philo,"is sleeping",MAGENTA);
-        ft_usleep(philo->time_to_sleep);
+        ft_usleep(philo->time_to_sleep, philo);
         ft_message(philo,"is thinking",GREEN);
     }
     return NULL;
