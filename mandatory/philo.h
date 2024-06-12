@@ -6,7 +6,11 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/06/12 16:56:39 by sessarhi         ###   ########.fr       */
+=======
+/*   Updated: 2024/06/12 14:55:13 by sessarhi         ###   ########.fr       */
+>>>>>>> 4de213b3aa468c152792201fec5c27dc5765b056
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +35,10 @@
 #define UNDERLINE "\033[4m"
 #define REVERSE "\033[7m"
 #define BOLD_RED "\x1b[1m\x1b[31m"
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4de213b3aa468c152792201fec5c27dc5765b056
 typedef struct s_data t_data;
 typedef struct s_philo
 {
