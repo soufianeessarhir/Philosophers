@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/11 14:47:49 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:55:13 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define BOLD    "\033[1m"
 #define UNDERLINE "\033[4m"
 #define REVERSE "\033[7m"
+#define BOLD_RED "\x1b[1m\x1b[31m"
 
 typedef struct s_data t_data;
 typedef struct s_philo

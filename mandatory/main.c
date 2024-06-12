@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 14:19:06 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:55:28 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void *a_worker(void *args)
             pthread_mutex_lock(&data->time_mutex);
             if (current_time() - data->philo[i].last_time_eat > data->time_to_die)
             {
-                ft_message(&data->philo[i], "died", RED);
+                ft_message(&data->philo[i], "died", BOLD_RED);
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
                 pthread_mutex_unlock(&data->dead_flag_mutex);
