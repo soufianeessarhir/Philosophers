@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 20:25:49 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 13:32:14 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:19:06 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,15 @@ void *a_worker(void *args)
         while (++i < data->num_of_philos && !dead_check(data->philo))
         {
             pthread_mutex_lock(&data->time_mutex);
-            if (current_time() - data->philo[i].last_time_eat >= data->time_to_die)
+            if (current_time() - data->philo[i].last_time_eat > data->time_to_die)
             {
                 ft_message(&data->philo[i], "died", RED);
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
                 pthread_mutex_unlock(&data->dead_flag_mutex);
            		pthread_mutex_unlock(&data->time_mutex);
-                // pthread_mutex_unlock(data->philo[i].left_fork);
-                // pthread_mutex_unlock(data->philo[i].right_fork);
-                break;
+                pthread_mutex_lock(data->philo[i].left_fork);
+                return NULL;
             }
            	pthread_mutex_unlock(&data->time_mutex);
         }
@@ -74,12 +73,12 @@ void *worker(void *args)
         pthread_mutex_lock(philo->left_fork);
         ft_message(philo,"has taken a fork",CYAN);
         ft_message(philo, "is eating", YELLOW);
+        ft_usleep(philo->time_to_eat);
         pthread_mutex_lock(philo->time_mutex);
         philo->last_time_eat = current_time();
         pthread_mutex_unlock(philo->time_mutex);
         pthread_mutex_unlock(philo->left_fork);
         pthread_mutex_unlock(philo->right_fork);
-        ft_usleep(philo->time_to_eat);
         ft_message(philo,"is sleeping",MAGENTA);
         ft_usleep(philo->time_to_sleep);
         ft_message(philo,"is thinking",GREEN);
@@ -100,8 +99,9 @@ int th_starting(t_data *data)
 	pthread_join(data->admin, NULL);
     i = -1;
     while (++i < data->num_of_philos)
-        if (pthread_join(data->philo[i].thread, NULL))
+        if (pthread_join(data->philo[i].thread,NULL))
             return (printf(RED"Failed to join philosopher number %d\n"RESET, i));
+        
     return 0;
 }
 
