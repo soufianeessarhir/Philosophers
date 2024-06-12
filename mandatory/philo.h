@@ -5,14 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/15 20:23:53 by sessarhi          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/06/12 16:56:39 by sessarhi         ###   ########.fr       */
-=======
-/*   Updated: 2024/06/12 14:55:13 by sessarhi         ###   ########.fr       */
->>>>>>> 4de213b3aa468c152792201fec5c27dc5765b056
+/*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
+/*   Updated: 2024/06/12 17:15:04 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef PHILO_H
 #define PHILO_H
@@ -35,11 +32,7 @@
 #define UNDERLINE "\033[4m"
 #define REVERSE "\033[7m"
 #define BOLD_RED "\x1b[1m\x1b[31m"
-<<<<<<< HEAD
-=======
 
->>>>>>> 4de213b3aa468c152792201fec5c27dc5765b056
-typedef struct s_data t_data;
 typedef struct s_philo
 {
     int             *dead;
@@ -72,7 +65,6 @@ typedef struct s_data
     pthread_mutex_t *forks;
 } t_data;
 
-
 int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
 size_t	current_time(void);
@@ -80,6 +72,4 @@ int	ft_usleep(size_t t_ms, t_philo *philo);
 int dead_check(t_philo *philo);
 void ft_message(t_philo *philo, char *text, char *color);
 void init_data(t_data *data, int ac, char **av);
-void ft_message(t_philo *philo, char *text, char *color);
-
 #endif
