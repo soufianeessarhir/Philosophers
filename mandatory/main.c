@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/13 14:00:23 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:20:34 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,14 +116,13 @@ int th_starting(t_data *data)
     while (++i < data->num_of_philos)
         if (pthread_join(data->philo[i].thread,NULL))
             return (printf(RED"Failed to join philosopher number %d\n"RESET, i));
-        
+    free(data->philo);
+    free(data->forks);  
     return 0;
 }
-
 int main(int ac, char **av)
 {
     t_data data;
-
     if (ac == 5 || ac == 6)
     {
         if (!ft_parce_args(ac, av))
