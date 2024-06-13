@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 17:15:04 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/13 11:21:08 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_philo
     int             id;
     size_t          time_to_eat;
     size_t          time_to_sleep;
+    int             num_times_eaten;
     int             num_times_to_eat;
     pthread_mutex_t *dead_flag_mutex;
 	pthread_mutex_t	*time_mutex;

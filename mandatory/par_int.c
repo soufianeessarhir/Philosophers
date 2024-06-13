@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 11:58:30 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/13 11:21:32 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void init_data(t_data *data, int ac, char **av)
         	data->philo[data->counter].num_times_to_eat = ft_atoi(av[5]);
 		else
         	data->philo[data->counter].num_times_to_eat =  -1;
+		data->philo[data->counter].num_times_eaten = 0;
 		data->philo[data->counter].dead_flag_mutex = &data->dead_flag_mutex;
 		data->philo[data->counter].time_mutex = &data->time_mutex;
 		data->philo[data->counter].message = &data->message;

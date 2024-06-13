@@ -6,15 +6,42 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 17:13:53 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/13 12:15:07 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
+void destroy_mutex(t_data *data)
+{
+    int i;
 
+    i = -1;
+    pthread_mutex_destroy(&data->time_mutex);
+    pthread_mutex_destroy(&data->message);
+    pthread_mutex_destroy(&data->dead_flag_mutex);
+    while (++i < data->num_of_philos)
+    {
+        pthread_mutex_unlock(data->philo[i].left_fork);
+        pthread_mutex_unlock(data->philo[i].right_fork);
+        pthread_mutex_destroy(data->philo[i].time_mutex);
+        pthread_mutex_destroy(data->philo[i].message);
+        pthread_mutex_destroy(data->philo[i].left_fork);
+        pthread_mutex_destroy(data->philo[i].right_fork);
+    }
+}
 
-
+int meales_eaten(t_data *data)
+{
+    int i;
+    if (data->philo->num_times_to_eat == -1)
+        return 0;
+    i = -1;
+    while (++i < data[0].num_of_philos)
+        if (data->philo[i].num_times_eaten < data->philo[i].num_times_to_eat)
+            return 0;
+    return 1;
+}
 void *a_worker(void *args)
 {
     int i;
@@ -27,16 +54,15 @@ void *a_worker(void *args)
         while (++i < data->num_of_philos && !dead_check(data->philo))
         {
             pthread_mutex_lock(&data->time_mutex);
-            if (current_time() - data->philo[i].last_time_eat > data->time_to_die)
+            if (current_time() - data->philo[i].last_time_eat > data->time_to_die || meales_eaten(data))
             {
-                ft_message(&data->philo[i], "died", BOLD_RED);
+                if (!meales_eaten(data))
+                    ft_message(&data->philo[i], "died", BOLD_RED);
                 pthread_mutex_lock(&data->dead_flag_mutex);
                 data->dead_flag = 1;
-                pthread_mutex_unlock(data->philo[i].left_fork);
-                pthread_mutex_unlock(data->philo[i].right_fork);
                 pthread_mutex_unlock(&data->dead_flag_mutex);
            		pthread_mutex_unlock(&data->time_mutex);
-                return NULL;
+                return (NULL);
             }
            	pthread_mutex_unlock(&data->time_mutex);
         }
@@ -60,6 +86,7 @@ void *worker(void *args)
         ft_usleep(philo->time_to_eat, philo);
         pthread_mutex_lock(philo->time_mutex);
         philo->last_time_eat = current_time();
+        philo->num_times_eaten++;
         pthread_mutex_unlock(philo->time_mutex);
         pthread_mutex_unlock(philo->right_fork);
         pthread_mutex_unlock(philo->left_fork);
