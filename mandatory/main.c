@@ -6,20 +6,21 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/13 12:15:07 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:00:23 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
+
 void destroy_mutex(t_data *data)
 {
     int i;
 
     i = -1;
-    pthread_mutex_destroy(&data->time_mutex);
-    pthread_mutex_destroy(&data->message);
-    pthread_mutex_destroy(&data->dead_flag_mutex);
+    pthread_mutex_lock(&data->time_mutex);
+    pthread_mutex_lock(&data->message);
+    pthread_mutex_lock(&data->dead_flag_mutex);
     while (++i < data->num_of_philos)
     {
         pthread_mutex_unlock(data->philo[i].left_fork);
@@ -29,6 +30,9 @@ void destroy_mutex(t_data *data)
         pthread_mutex_destroy(data->philo[i].left_fork);
         pthread_mutex_destroy(data->philo[i].right_fork);
     }
+    pthread_mutex_unlock(&data->time_mutex);
+    pthread_mutex_unlock(&data->message);
+    pthread_mutex_unlock(&data->dead_flag_mutex);
 }
 
 int meales_eaten(t_data *data)
@@ -62,7 +66,7 @@ void *a_worker(void *args)
                 data->dead_flag = 1;
                 pthread_mutex_unlock(&data->dead_flag_mutex);
            		pthread_mutex_unlock(&data->time_mutex);
-                return (NULL);
+                return (destroy_mutex(data),NULL);
             }
            	pthread_mutex_unlock(&data->time_mutex);
         }
