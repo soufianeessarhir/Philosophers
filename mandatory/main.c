@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/13 14:20:34 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:23:58 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,13 @@ void destroy_mutex(t_data *data)
     int i;
 
     i = -1;
-    pthread_mutex_lock(&data->time_mutex);
-    pthread_mutex_lock(&data->message);
-    pthread_mutex_lock(&data->dead_flag_mutex);
     while (++i < data->num_of_philos)
     {
         pthread_mutex_unlock(data->philo[i].left_fork);
         pthread_mutex_unlock(data->philo[i].right_fork);
-        pthread_mutex_destroy(data->philo[i].time_mutex);
-        pthread_mutex_destroy(data->philo[i].message);
         pthread_mutex_destroy(data->philo[i].left_fork);
         pthread_mutex_destroy(data->philo[i].right_fork);
     }
-    pthread_mutex_unlock(&data->time_mutex);
-    pthread_mutex_unlock(&data->message);
-    pthread_mutex_unlock(&data->dead_flag_mutex);
 }
 
 int meales_eaten(t_data *data)
@@ -66,7 +58,8 @@ void *a_worker(void *args)
                 data->dead_flag = 1;
                 pthread_mutex_unlock(&data->dead_flag_mutex);
            		pthread_mutex_unlock(&data->time_mutex);
-                return (destroy_mutex(data),NULL);
+                pthread_mutex_unlock(data->philo[i].left_fork);
+                return (NULL);
             }
            	pthread_mutex_unlock(&data->time_mutex);
         }
@@ -106,7 +99,7 @@ int th_starting(t_data *data)
     int i;
 
     i = -1;
-    if (pthread_create(&data->admin, NULL, a_worker, data))
+    if (pthread_create(&data->admin, NULL, a_worker, data) && data)
         return (printf(RED"Failed to create admin philosopher\n"RESET));
     while (++i < data->num_of_philos)
         if (pthread_create(&data->philo[i].thread, NULL, worker, &data->philo[i]))
