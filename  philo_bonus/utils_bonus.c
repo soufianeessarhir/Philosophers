@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/12 16:55:48 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/09 03:40:01 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 int	ft_atoi(const char *str)
 {
 	long long	nb;
@@ -44,10 +44,9 @@ size_t	current_time(void)
 
 void ft_message(t_philo *philo, char *text, char *color)
 {
-    pthread_mutex_lock(philo->message);
-    if (!dead_check(philo))
-        printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->start_time, philo->id, text);
-    pthread_mutex_unlock(philo->message);
+	sem_wait(philo->message);
+		printf("%s""%zu %d %s\n" RESET, color, current_time() - philo->start_time, philo->id, text);
+	sem_post(philo->message);
 }
 int	ft_usleep(size_t t_ms, t_philo *philo)
 {
@@ -56,23 +55,25 @@ int	ft_usleep(size_t t_ms, t_philo *philo)
 	start = current_time();
 	while ((current_time() - start) < t_ms)
 	{
-		if (dead_check(philo))
-			return (1);
 		usleep(100);
 	}
+		(void)philo;
 	return (0);
 }
-int dead_check(t_philo *philo)
-{
-    int i;
+// int dead_check(t_philo *philo)
+// {
+//     int i;
 
-    i = -1;
-    while (++i < philo->num_of_philos)
-    {
-        pthread_mutex_lock(philo->dead_flag_mutex);
-        if (*philo->dead == 1)
-            return (pthread_mutex_unlock(philo->dead_flag_mutex),1);   
-        pthread_mutex_unlock(philo->dead_flag_mutex);
-    }
-    return 0;
-}
+//     i = -1;
+//     while (++i < philo->num_of_philos)
+//     {
+//        sem_wait(philo[i].dead_flag_sem);
+// 	   if (*philo[i].dead)
+// 	   {
+// 		   sem_post(philo[i].dead_flag_sem);
+// 		   return 1;
+// 	   }
+// 	   sem_post(philo[i].dead_flag_sem);
+//     }
+//     return 0;
+// }
