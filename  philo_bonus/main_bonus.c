@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/09 04:26:09 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/24 16:35:58 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,18 @@
 // }
 void *a_worker(void *args)
 {
-    int i;
     t_philo *philo;
     
     philo = (t_philo *)args;
 	while (1)
 	{
-		i = -1;
-		while (++i < philo->num_of_philos)
-		{
 			sem_wait(philo->dead);
 			if (current_time() - philo->last_time_eat > philo->time_to_die /*|| meales_eaten(philo)*/)
 			{
 				ft_message(philo, "died", BOLD_RED);
-				// sem_wait(philo->dead);
-				// *philo->dead = 1;
-				sem_post(philo->dead);
-				// sem_post(philo->philo[i].time_sem);
 				exit(1);
 			}
 			sem_post(philo->dead);
-			usleep(100);
-		}
 	}
     return NULL;
 }
@@ -69,7 +59,7 @@ void *worker(void *args)
     
     philo = (t_philo *)args;
     if (philo->id % 2 == 0) 
-	ft_usleep(1, philo);
+		ft_usleep(1, philo);
    	while (1)
     {
 		sem_wait(philo->fork);
@@ -90,8 +80,9 @@ void *worker(void *args)
 }
 int child_process(t_philo *philo)
 {
-	philo->id++;
+	philo->id  += 1;
 	philo->num_times_eaten = 0;
+	philo->last_time_eat = current_time();
 	if (pthread_create(&philo->philo, NULL, a_worker, philo))
 		return (printf(RED"Error in the thread\n"RESET), 1);
 	worker(philo);
@@ -112,9 +103,7 @@ int parent_process(t_philo *philo ,int *pid)
 		{
 			i = -1;
 			while (++i < philo->num_of_philos)
-			{
                kill(pid[i], SIGKILL);
-			}
 			return 1;
 		}
 	}
@@ -132,15 +121,15 @@ int th_starting(t_philo *philo)
 	while (++i < philo->num_of_philos)
 	{
 		pid[i] = fork();
-		if (pid[i] == 0)
+		if (pid[i] < 0)
+			return (printf(RED"Error in the fork\n"RESET));
+		else if (pid[i] == 0)
 		{
 		  philo->id = i;
 		  break;
 		}
-		if (pid[i] < 0)
-			return (printf(RED"Error in the fork\n"RESET));
 	}
-	if (pid[philo->id] == 0 && child_process(philo))
+	if (pid[philo->id] == 0 && !child_process(philo))
 		return 1;
 	else
 	   parent_process(philo, pid);
