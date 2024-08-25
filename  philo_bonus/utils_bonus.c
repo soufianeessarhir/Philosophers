@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/09 03:40:01 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/25 12:06:50 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,3 @@ int	ft_usleep(size_t t_ms, t_philo *philo)
 		(void)philo;
 	return (0);
 }
-// int dead_check(t_philo *philo)
-// {
-//     int i;
-
-//     i = -1;
-//     while (++i < philo->num_of_philos)
-//     {
-//        sem_wait(philo[i].dead_flag_sem);
-// 	   if (*philo[i].dead)
-// 	   {
-// 		   sem_post(philo[i].dead_flag_sem);
-// 		   return 1;
-// 	   }
-// 	   sem_post(philo[i].dead_flag_sem);
-//     }
-//     return 0;
-// }
