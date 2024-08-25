@@ -6,36 +6,13 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/24 16:35:58 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/25 14:34:09 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo_bonus.h"
 
-// void destroy_sem(t_philo *data)
-// {
-//     int i;
-
-//     i = -1;
-//     while (++i < data->num_of_philos)
-//     {
-//         sem_close(data->philo[i].left_fork);
-// 		sem_close(data->philo[i].right_fork);
-//     }
-// }
-
-// int meales_eaten(t_data *data)
-// {
-//     int i;
-//     if (data->philo->num_times_to_eat == -1)
-//         return 0;
-//     i = -1;
-//     while (++i < data[0].num_of_philos)
-//         if (data->philo[i].num_times_eaten < data->philo[i].num_times_to_eat)
-//             return 0;
-//     return 1;
-// }
 void *a_worker(void *args)
 {
     t_philo *philo;
@@ -44,14 +21,14 @@ void *a_worker(void *args)
 	while (1)
 	{
 			sem_wait(philo->dead);
-			if (current_time() - philo->last_time_eat > philo->time_to_die /*|| meales_eaten(philo)*/)
+			if (current_time() - philo->last_time_eat > philo->time_to_die)
 			{
 				ft_message(philo, "died", BOLD_RED);
 				exit(1);
 			}
+			usleep(200);
 			sem_post(philo->dead);
 	}
-    return NULL;
 }
 void *worker(void *args)
 {
@@ -67,8 +44,12 @@ void *worker(void *args)
 		sem_wait(philo->fork);
 		ft_message(philo, "has taken a fork", CYAN);
 		ft_message(philo, "is eating", GREEN);
+		sem_wait(philo->dead);
+		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
+			exit(1);
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
+		sem_post(philo->dead);
 		ft_usleep(philo->time_to_eat, philo);
 		sem_post(philo->fork);
 		sem_post(philo->fork);
@@ -76,7 +57,6 @@ void *worker(void *args)
 		ft_usleep(philo->time_to_sleep, philo);
 		ft_message(philo, "is thinking", YELLOW);
     }
-    return NULL;
 }
 int child_process(t_philo *philo)
 {

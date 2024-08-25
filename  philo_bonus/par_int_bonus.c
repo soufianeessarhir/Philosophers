@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/24 16:20:07 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/25 14:29:33 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,11 @@ void init_philo(t_philo *philo, int ac, char **av)
 	sem_unlink("fork_sem");
 	sem_unlink("dead_sem");
 	sem_unlink("message_sem");
+	sem_unlink("eat_sem");
     philo->fork = sem_open("fork_sem", O_CREAT, 0644, philo->num_of_philos);
     philo->time_sem = sem_open("dead_sem", O_CREAT, 0644, 1);
     philo->message = sem_open("message_sem", O_CREAT, 0644, 1);
-    philo->dead = 0;
+	philo->dead = sem_open("dead_sem", O_CREAT, 0644, 1);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)

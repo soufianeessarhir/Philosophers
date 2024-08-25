@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/09 03:40:30 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/25 14:30:49 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ typedef struct s_philo
     int             num_times_eaten;
     int             num_times_to_eat;
     size_t          start_time;
-	sem_t			*fork;
 	size_t          time_to_die;
+	sem_t			*fork;
 	sem_t			*time_sem;
 	sem_t			*message;
     sem_t			*dead;

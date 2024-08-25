@@ -7,7 +7,7 @@ SOURCES = main_bonus.c\
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror  -g
+CFLAGS = -Wall -Wextra -Werror  -g 
 RM = rm -f
 
 all: $(NAME) $(BNAME)
