@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/25 14:34:09 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/25 15:56:17 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void *a_worker(void *args)
 				ft_message(philo, "died", BOLD_RED);
 				exit(1);
 			}
-			usleep(200);
+			usleep(100);
 			sem_post(philo->dead);
 	}
 }
@@ -44,13 +44,13 @@ void *worker(void *args)
 		sem_wait(philo->fork);
 		ft_message(philo, "has taken a fork", CYAN);
 		ft_message(philo, "is eating", GREEN);
+		ft_usleep(philo->time_to_eat, philo);
 		sem_wait(philo->dead);
-		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
-			exit(1);
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
+		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
+			exit(1);
 		sem_post(philo->dead);
-		ft_usleep(philo->time_to_eat, philo);
 		sem_post(philo->fork);
 		sem_post(philo->fork);
 		ft_message(philo, "is sleeping", MAGENTA);
