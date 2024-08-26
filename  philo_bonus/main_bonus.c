@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/25 15:56:17 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:25:59 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,18 @@ void *a_worker(void *args)
     philo = (t_philo *)args;
 	while (1)
 	{
+			sem_wait(philo->eat[philo->id]);
 			sem_wait(philo->dead);
 			if (current_time() - philo->last_time_eat > philo->time_to_die)
 			{
 				ft_message(philo, "died", BOLD_RED);
+				// sem_post(philo->dead);
+				// sem_post(philo->eat[philo->id]);
 				exit(1);
 			}
-			usleep(100);
 			sem_post(philo->dead);
+			sem_post(philo->eat[philo->id]);
+			usleep(100);
 	}
 }
 void *worker(void *args)
@@ -45,12 +49,14 @@ void *worker(void *args)
 		ft_message(philo, "has taken a fork", CYAN);
 		ft_message(philo, "is eating", GREEN);
 		ft_usleep(philo->time_to_eat, philo);
-		sem_wait(philo->dead);
+		// sem_wait(philo->dead);
+		sem_wait(philo->eat[philo->id]);
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
 		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
 			exit(1);
-		sem_post(philo->dead);
+		sem_post(philo->eat[philo->id]);
+		// sem_post(philo->dead);
 		sem_post(philo->fork);
 		sem_post(philo->fork);
 		ft_message(philo, "is sleeping", MAGENTA);
@@ -61,6 +67,8 @@ void *worker(void *args)
 int child_process(t_philo *philo)
 {
 	philo->id  += 1;
+	sem_unlink(ft_strjoin("sem_eat", ft_itoa(philo->id)));
+	philo->eat[philo->id] = sem_open(ft_strjoin("sem_eat", ft_itoa(philo->id)), O_CREAT, 0644, 1);
 	philo->num_times_eaten = 0;
 	philo->last_time_eat = current_time();
 	if (pthread_create(&philo->philo, NULL, a_worker, philo))
