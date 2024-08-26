@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/25 14:30:49 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:44:29 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_philo
     size_t          start_time;
 	size_t          time_to_die;
 	sem_t			*fork;
-	sem_t			*time_sem;
+	sem_t			**eat;
 	sem_t			*message;
     sem_t			*dead;
 } t_philo;
@@ -58,6 +58,9 @@ int ft_parce_args(int ac, char **av);
 int	ft_atoi(const char *str);
 size_t	current_time(void);
 int	ft_usleep(size_t t_ms, t_philo *philo);
+char	*ft_itoa(int n);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *s);
 // int dead_check(t_philo *philo);
 void ft_message(t_philo *philo, char *text, char *color);
 void init_philo(t_philo *philo, int ac, char **av);
