@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/26 16:25:59 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:14:12 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ void *a_worker(void *args)
 			sem_wait(philo->dead);
 			if (current_time() - philo->last_time_eat > philo->time_to_die)
 			{
-				ft_message(philo, "died", BOLD_RED);
-				// sem_post(philo->dead);
-				// sem_post(philo->eat[philo->id]);
+				sem_wait(philo->message);
+				printf("%s""%zu %d %s\n" RESET, BOLD_RED, current_time() - philo->start_time, philo->id, "died");
+				sem_post(philo->dead);
+				sem_post(philo->eat[philo->id]);
 				exit(1);
 			}
 			sem_post(philo->dead);
@@ -49,14 +50,14 @@ void *worker(void *args)
 		ft_message(philo, "has taken a fork", CYAN);
 		ft_message(philo, "is eating", GREEN);
 		ft_usleep(philo->time_to_eat, philo);
-		// sem_wait(philo->dead);
 		sem_wait(philo->eat[philo->id]);
+		sem_wait(philo->dead);
+		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
+			exit(1); 
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
-		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
-			exit(1);
+		sem_post(philo->dead);
 		sem_post(philo->eat[philo->id]);
-		// sem_post(philo->dead);
 		sem_post(philo->fork);
 		sem_post(philo->fork);
 		ft_message(philo, "is sleeping", MAGENTA);
@@ -70,7 +71,6 @@ int child_process(t_philo *philo)
 	sem_unlink(ft_strjoin("sem_eat", ft_itoa(philo->id)));
 	philo->eat[philo->id] = sem_open(ft_strjoin("sem_eat", ft_itoa(philo->id)), O_CREAT, 0644, 1);
 	philo->num_times_eaten = 0;
-	philo->last_time_eat = current_time();
 	if (pthread_create(&philo->philo, NULL, a_worker, philo))
 		return (printf(RED"Error in the thread\n"RESET), 1);
 	worker(philo);
@@ -104,6 +104,7 @@ int th_starting(t_philo *philo)
 	int *pid;
 
 	philo->start_time = current_time();
+	philo->last_time_eat = philo->start_time;
     pid = malloc(sizeof(int) * philo->num_of_philos);
 	i = -1;
 	while (++i < philo->num_of_philos)
