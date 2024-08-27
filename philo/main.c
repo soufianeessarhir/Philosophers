@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/06/14 15:23:58 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:49:36 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ int main(int ac, char **av)
     {
         if (!ft_parce_args(ac, av))
             return (printf(RED"Error in the arguments. Retry again.\n"RESET));
+		if (ft_atoi(av[1]) == 0 || ft_atoi(av[2]) < 60 || ft_atoi(av[3]) < 60 || ft_atoi(av[4]) < 60)
+			return 0;
         init_data(&data, ac, av);
         th_starting(&data);
     }
