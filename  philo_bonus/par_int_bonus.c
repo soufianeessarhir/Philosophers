@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/26 17:53:24 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:01:43 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,16 @@ void init_philo(t_philo *philo, int ac, char **av)
     philo->num_of_philos = ft_atoi(av[1]);
     philo->time_to_die = ft_atoi(av[2]);
 	philo->eat = malloc(sizeof(sem_t *) * philo->num_of_philos);
+	if (!philo->eat)
+		return (exit(printf(RED"Error malloc\n"RESET)),(void)0);
 	sem_unlink("fork_sem");
 	sem_unlink("dead_sem");
 	sem_unlink("message_sem");
     philo->fork = sem_open("fork_sem", O_CREAT, 0644, philo->num_of_philos);
     philo->message = sem_open("message_sem", O_CREAT, 0644, 1);
 	philo->dead = sem_open("dead_sem", O_CREAT, 0644, 1);
-	 if (philo->fork == SEM_FAILED || philo->dead == SEM_FAILED)
-    {
-        printf(RED"Error initializing semaphores\n"RESET);
-        exit(1);
-    }
+	if (philo->fork == SEM_FAILED || philo->dead == SEM_FAILED || philo->message == SEM_FAILED)
+        return (free(philo->eat), exit(printf(RED"Error sem_open\n"RESET)),(void)0);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
