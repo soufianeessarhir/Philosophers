@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:53:04 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/26 13:54:50 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/27 12:21:03 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
 	char	*newstr;
+	char	*str;
 
 	i = 0;
+	str = (char *)s2;
 	if (!s1 || !s2)
 		return (NULL);
 	newstr = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
@@ -81,6 +83,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	*(newstr + i) = '\0';
+	free(str);
 	return (newstr);
 }
 size_t	ft_strlen(const char *s)
