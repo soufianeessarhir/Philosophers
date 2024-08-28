@@ -6,12 +6,23 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/27 17:02:46 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:12:12 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo_bonus.h"
+
+void free_all(t_philo *philo)
+{
+	int i;
+
+	i = -1;
+	sem_close(philo->eat[i]);
+	sem_unlink(philo->str);
+	free(philo->str);
+	free(philo->eat);
+}
 
 void *a_worker(void *args)
 {
@@ -28,7 +39,7 @@ void *a_worker(void *args)
 				printf("%s""%zu %d %s\n" RESET, BOLD_RED, current_time() - philo->start_time, philo->id, "died");
 				sem_post(philo->dead);
 				sem_post(philo->eat[philo->id]);
-				return ( exit(0), (void *)0);
+				return (free_all(philo), exit(0), (void *)0);
 			}
 			sem_post(philo->dead);
 			sem_post(philo->eat[philo->id]);
@@ -53,7 +64,7 @@ void *worker(void *args)
 		sem_wait(philo->eat[philo->id]);
 		sem_wait(philo->dead);
 		if (philo->num_times_to_eat != -1 && philo->num_times_eaten == philo->num_times_to_eat)
-			return (exit(0), (void *)0);
+			return (free_all(philo),exit(1), (void *)0);
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
 		sem_post(philo->dead);
@@ -68,15 +79,15 @@ void *worker(void *args)
 int child_process(t_philo *philo)
 {
 	philo->id  += 1;
-	char *str;
-	str = ft_strjoin("sem_eat", ft_itoa(philo->id));
-	sem_unlink(str);
-	philo->eat[philo->id] = sem_open(str, O_CREAT, 0644, 1);
+
+	philo->str = ft_strjoin("sem_eat", ft_itoa(philo->id));
+	sem_unlink(philo->str);
+	philo->eat[philo->id] = sem_open(philo->str, O_CREAT, 0644, 1);
 	philo->num_times_eaten = 0;
 	if (pthread_create(&philo->philo, NULL, a_worker, philo))
-		return (free(str), printf(RED"Error in the thread\n"RESET), 1);
+		return (printf(RED"Error in the thread\n"RESET), 1);
 	worker(philo);
-	return (free(str), exit(0), 0);
+	return (free(philo->str),exit(0), 0);
 }
 
 int parent_process(t_philo *philo ,int *pid)
@@ -95,7 +106,6 @@ int parent_process(t_philo *philo ,int *pid)
 			{
 			
                kill(pid[i], SIGKILL);
-			   sem_unlink(ft_strjoin("sem_eat", ft_itoa(i)));
 			   sem_close(philo->eat[i]);
 			   free(philo->eat[i]);
 			}
@@ -151,7 +161,7 @@ int main(int ac, char **av)
 			return 0;
         init_philo(&philo, ac, av);
         th_starting(&philo);
-		free(philo.eat);
+		// free(philo.eat);
 		sem_unlink("fork_sem");
 		sem_unlink("dead_sem");
 		sem_unlink("message_sem");

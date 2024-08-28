@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/26 15:44:29 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/28 14:58:49 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_philo
 	sem_t			**eat;
 	sem_t			*message;
     sem_t			*dead;
+	char			*str;
 } t_philo;
 
 
