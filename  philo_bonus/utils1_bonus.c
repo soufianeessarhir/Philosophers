@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:53:04 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/27 12:21:03 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/28 17:38:36 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ char	*ft_itoa(int n)
 	}
 	return (str);
 }
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -74,7 +75,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	while (*s1)
 	{
-		newstr[i] = *s1++; 
+		newstr[i] = *s1++;
 		i++;
 	}
 	while (*s2)
@@ -86,6 +87,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	free(str);
 	return (newstr);
 }
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -94,4 +96,29 @@ size_t	ft_strlen(const char *s)
 	while (s[i])
 		i++;
 	return (i);
+}
+
+int	parent_process(t_philo *philo ,int *pid)
+{
+	int i;
+	int status;
+
+	i = -1;
+	while (++i < philo->num_of_philos)
+	{
+		waitpid(-1, &status, 0);
+		if (status != 0)
+		{
+			i = -1;
+			while (++i < philo->num_of_philos)
+			{
+				kill(pid[i], SIGKILL);
+				sem_close(philo->eat[i]);
+				free(philo->eat[i]);
+			}
+			free(philo->eat);
+			return 1;
+		}
+	}
+	return 0;
 }

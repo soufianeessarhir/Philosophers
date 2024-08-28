@@ -4,11 +4,12 @@ SOURCES = main_bonus.c\
 		  par_int_bonus.c\
 		  utils_bonus.c\
 		  utils1_bonus.c\
+		  utils2_bonus.c\
 
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror   -pthread 
+CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -f
 
 all: $(NAME) $(BNAME)
