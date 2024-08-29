@@ -3,11 +3,12 @@ NAME = philo
 SOURCES = main.c\
 		  par_int.c\
 		  utils.c\
+		  utils2.c\
 
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -f
 
 all: $(NAME) $(BNAME)

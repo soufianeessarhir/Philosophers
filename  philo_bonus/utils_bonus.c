@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:34:35 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:39:18 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:32:56 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ size_t	current_time(void)
 	return (time.tv_sec * 1e3 + time.tv_usec / 1e3);
 }
 
-void ft_message(t_philo *philo, char *text, char *color)
+void	ft_message(t_philo *philo, char *text, char *color)
 {
 	sem_wait(philo->message);
 	printf("%s""%zu %d %s\n" RESET, color,
@@ -66,7 +66,7 @@ int	ft_usleep(size_t t_ms, t_philo *philo)
 
 int	child_process(t_philo *philo)
 {
-	philo->id  += 1;
+	philo->id += 1;
 	philo->str = ft_strjoin("sem_eat", ft_itoa(philo->id));
 	sem_unlink(philo->str);
 	philo->eat[philo->id] = sem_open(philo->str, O_CREAT, 0644, 1);
@@ -74,5 +74,5 @@ int	child_process(t_philo *philo)
 	if (pthread_create(&philo->philo, NULL, a_worker, philo))
 		return (printf(RED"Error in the thread\n"RESET), 1);
 	worker(philo);
-	return (free(philo->str),exit(0), 0);
+	return (free(philo->str), exit(0), 0);
 }

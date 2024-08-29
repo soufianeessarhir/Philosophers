@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:53:04 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:38:36 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:29:54 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-int	parent_process(t_philo *philo ,int *pid)
+int	parent_process(t_philo *philo, int *pid)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = -1;
 	while (++i < philo->num_of_philos)
@@ -117,8 +117,8 @@ int	parent_process(t_philo *philo ,int *pid)
 				free(philo->eat[i]);
 			}
 			free(philo->eat);
-			return 1;
+			return (1);
 		}
 	}
-	return 0;
+	return (0);
 }
