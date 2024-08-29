@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 17:40:16 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:41:35 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:30:37 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	free_all(t_philo *philo)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	sem_close(philo->eat[i]);
@@ -22,7 +22,15 @@ void	free_all(t_philo *philo)
 	free(philo->str);
 	free(philo->eat);
 }
-int	th_starting(t_philo *philo) 
+
+void	ft_error(t_philo *philo, int **pid)
+{
+	free_all(philo);
+	free(pid);
+	printf(RED"Error in malloc\n"RESET);
+}
+
+int	th_starting(t_philo *philo)
 {
 	int	i;
 	int	*pid;
@@ -31,8 +39,7 @@ int	th_starting(t_philo *philo)
 	philo->last_time_eat = philo->start_time;
 	pid = malloc(sizeof(int) * philo->num_of_philos);
 	if (!pid)
-		return (free(philo->eat), free(pid),
-			exit(printf(RED"Error malloc\n"RESET)), 1);
+		return (ft_error(philo, &pid), 1);
 	i = -1;
 	while (++i < philo->num_of_philos)
 	{

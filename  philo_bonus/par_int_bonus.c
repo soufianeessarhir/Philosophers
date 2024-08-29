@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 14:26:14 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:30:52 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:38:03 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,25 @@ static	int	check_dig(char **av)
 	return (1);
 }
 
-int ft_parce_args(int ac, char **av)
+int	ft_parce_args(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < ac)
 	{
 		if (!av[i])
-			return (0);	
+			return (0);
 		i++;
 	}
 	if (!check_dig(av))
-		return 0;
+		return (0);
 	return (1);
 }
 
-void init_philo(t_philo *philo, int ac, char **av)
+void	init_philo(t_philo *philo, int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	philo->num_of_philos = ft_atoi(av[1]);

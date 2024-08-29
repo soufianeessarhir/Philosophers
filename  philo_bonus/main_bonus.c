@@ -6,13 +6,13 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:13:52 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:53:45 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:29:17 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void eat(t_philo *philo)
+void	eat(t_philo *philo)
 {
 	sem_wait(philo->fork);
 	ft_message(philo, "has taken a fork", CYAN);
@@ -22,9 +22,9 @@ void eat(t_philo *philo)
 	ft_usleep(philo->time_to_eat, philo);
 }
 
-void *a_worker(void *args)
+void	*a_worker(void *args)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)args;
 	while (1)
@@ -51,7 +51,7 @@ void	*worker(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
-	if (philo->id % 2 == 0) 
+	if (philo->id % 2 == 0)
 		usleep(200);
 	while (1)
 	{
@@ -60,7 +60,7 @@ void	*worker(void *args)
 		sem_wait(philo->dead);
 		if (philo->num_times_to_eat != -1 && philo->num_times_eaten
 			== philo->num_times_to_eat)
-			return (free_all(philo),exit(1), (void *)0);
+			return (free_all(philo), exit(1), (void *)0);
 		philo->last_time_eat = current_time();
 		philo->num_times_eaten++;
 		sem_post(philo->dead);
@@ -77,7 +77,6 @@ int	main(int ac, char **av)
 {
 	t_philo	philo;
 
-	// atexit(f);
 	if (ac == 5 || ac == 6)
 	{
 		if (!ft_parce_args(ac, av))

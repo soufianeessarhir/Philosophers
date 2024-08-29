@@ -6,7 +6,7 @@
 /*   By: sessarhi <sessarhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:14:17 by sessarhi          #+#    #+#             */
-/*   Updated: 2024/08/28 17:43:14 by sessarhi         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:32:03 by sessarhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,11 @@ char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
 void	ft_message(t_philo *philo, char *text, char *color);
 void	init_philo(t_philo *philo, int ac, char **av);
-int		parent_process(t_philo *philo ,int *pid);
+int		parent_process(t_philo *philo, int *pid);
 int		child_process(t_philo *philo);
 void	free_all(t_philo *philo);
 int		th_starting(t_philo *philo);
 void	*worker(void *args);
-void	f(void);
 void	*a_worker(void *args);
 
 #endif
